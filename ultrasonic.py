@@ -1,6 +1,4 @@
-#!/usr/bin/env/python
-import RPi.GPIO as GPIO
-import time
+
 trig=11
 echo =12
 
@@ -8,6 +6,9 @@ def setup():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(trig,GPIO.OUT)
     GPIO.setup(echo,GPIO.IN)
+    GPIO.setup(motor1A,GPIO.OUT)
+    GPIO.setup(motor2A,GPIO.OUT)
+    GPIO.setup(motor3A,GPIO.OUT)
 def distance():
     GPIO.output(trig,0)
     time.sleep(0.000002)
