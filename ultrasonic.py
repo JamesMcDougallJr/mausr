@@ -1,14 +1,15 @@
 
 trig=11
 echo =12
-
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BOARD)
+GPIO.setwarnings(False)
 def setup():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(trig,GPIO.OUT)
     GPIO.setup(echo,GPIO.IN)
-    GPIO.setup(motor1A,GPIO.OUT)
-    GPIO.setup(motor2A,GPIO.OUT)
-    GPIO.setup(motor3A,GPIO.OUT)
+    
 def distance():
     GPIO.output(trig,0)
     time.sleep(0.000002)
@@ -23,17 +24,17 @@ def distance():
         time2=time.time()
     during=time2-time1
     return during * 340/2*100
-def loop():
-    while True:
-        dis=distance()
-        print (dis,'cm')
-        print ('')
-        time.sleep(0.3)
+#def loop():
+    #while True:
+       # dis=distance()
+        #print (dis,'cm')
+        #print ('')
+       # time.sleep(0.3)
 def destroy():
     GPIO.cleanup()
-if __name__==("__main__"):
-    setup()
-try:
-    loop()
-except KeyboardInterrupt:
-    destroy()
+#if __name__==("__main__"):
+    #setup()
+#try:
+    #loop()
+#except KeyboardInterrupt:
+    #destroy()
