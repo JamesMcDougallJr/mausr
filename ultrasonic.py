@@ -24,17 +24,18 @@ def distance():
         time2=time.time()
     during=time2-time1
     return during * 340/2*100
-#def loop():
-    #while True:
-       # dis=distance()
-        #print (dis,'cm')
-        #print ('')
-       # time.sleep(0.3)
+def loop():
+    while True:
+        dis=distance()
+        print (dis,'cm')
+        print ('')
+        time.sleep(0.3)
 def destroy():
     GPIO.cleanup()
 #if __name__==("__main__"):
     #setup()
-#try:
-    #loop()
-#except KeyboardInterrupt:
-    #destroy()
+setup()
+try:
+    loop()
+except KeyboardInterrupt:
+    destroy()

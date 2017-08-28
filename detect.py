@@ -6,20 +6,17 @@
 #echo =12
 import RPi.GPIO as GPIO
 import time
-from motor import runMotor, stop, setupMotor
-from ultrasonic import setup, distance, destroy
+#from motor import runMotor, stop, setupMotor
+from ultrasonic import setup, distance, destroy, loop
 GPIO.setmode(GPIO.BOARD)
 setup()
-setupMotor()
-runMotor()
-if distance() < 10:
-    stop()
-    turnRight()
-runMotor()
+#setupMotor()
 
+try:
+    loop()
+except KeyboardInterrupt:
+    destroy()
+    
+#runMotor()
 
-
-
-
-
-GPIO.cleanup()
+#GPIO.cleanup()
