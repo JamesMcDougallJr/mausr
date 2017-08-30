@@ -1,12 +1,10 @@
-
-trig=11
-echo =12
+trig=11 #orange
+echo =12 #white
 import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 def setup():
-    GPIO.setmode(GPIO.BOARD)
     GPIO.setup(trig,GPIO.OUT)
     GPIO.setup(echo,GPIO.IN)
     
@@ -23,7 +21,7 @@ def distance():
         a=1
         time2=time.time()
     during=time2-time1
-    return during * 340/2*100
+    return during * 17000
 def loop():
     while True:
         dis=distance()
