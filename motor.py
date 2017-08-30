@@ -1,11 +1,11 @@
 import RPi.GPIO as GPIO
 import time
-ain1 = 16 #purple
+ain1 = 16 #purple the left motor
 ain2 = 18 #Yellow
 stby = 22
 PWA  = 7
 PWB  = 40 #orange
-bin2 = 38
+bin2 = 38 #right motor when looking from behind
 bin1 = 36
 
 GPIO.setmode(GPIO.BOARD)
@@ -18,33 +18,49 @@ def setupMotor():
     GPIO.setup(stby,GPIO.OUT)
     GPIO.setup(PWA,GPIO.OUT)
 
-    #GPIO.setup(bin1,GPIO.OUT)
-    #GPIO.setup(bin2,GPIO.OUT)
-    #GPIO.setup(PWB,GPIO.OUT)
+    GPIO.setup(bin1,GPIO.OUT)
+    GPIO.setup(bin2,GPIO.OUT)
+    GPIO.setup(PWB,GPIO.OUT)
+    GPIO.output(PWA,GPIO.HIGH)
+    GPIO.output(PWB,GPIO.HIGH)
+ 
 #run the motor
-def run():
+def runall():
     
     GPIO.output(stby,GPIO.HIGH)
-    GPIO.output(PWA,GPIO.HIGH)
-    #GPIO.output(PWB,GPIO.HIGH)
-
-
     GPIO.output(ain1,GPIO.HIGH)
     GPIO.output(ain2,GPIO.LOW)
 
-    #GPIO.output(bin1,GPIO.HIGH)
-    #GPIO.output(bin2,GPIO.LOW)
-    
+    GPIO.output(bin1,GPIO.HIGH)
+    GPIO.output(bin2,GPIO.LOW)
+def Aforward():
+    GPIO.output(stby,GPIO.HIGH)
+    GPIO.output(ain1,GPIO.HIGH)
+    GPIO.output(ain2,GPIO.LOW)
+def Bforward():
+    GPIO.output(stby,GPIO.HIGH)
+    GPIO.output(bin1,GPIO.HIGH)
+    GPIO.output(bin2,GPIO.LOW)
+
 def stop():
-    GPIO.output(ain1,GPIO.LOW)
-    #GPIO.output(bin1,GPIO.LOW)
+    GPIO.output(stby,GPIO.LOW)
     
+def Bbackwards():
+    GPIO.output(bin2,GPIO.HIGH)
+    GPIO.output(bin1,GPIO.LOW)
+def Abackwards():
+    GPIO.output(ain2,GPIO.HIGH)
+    GPIO.output(ain1,GPIO.LOW)
+def right():
+    Bbackwards()
+def left():
 
 
-
-
-#setupMotor()
-#run()
-#time.sleep(10)
-#stop()
+setupMotor()
+run()
+time.sleep(10)
+Bbackwards()
+Abackwards()
+time.sleep(5)
+stop()
                                                                                                                                                                                                                                                                      
