@@ -8,10 +8,7 @@ if __name__==("__main__"):
     setup()
     setupMotor()
 run()
-distance()
-loop()
-time.sleep(10)
-    
-
-
+loop() #returns 0 if there is an object within 10cm
+if loop()==0:
+    stop()
 

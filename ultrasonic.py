@@ -27,13 +27,17 @@ def loop():
         dis=distance()
         print (dis,'cm')
         print ('')
+        if dis < 10:
+            return 0
         time.sleep(0.3)
+        
+        
 def destroy():
     GPIO.cleanup()
 #if __name__==("__main__"):
     #setup()
-setup()
-try:
-    loop()
-except KeyboardInterrupt:
-    destroy()
+#setup()
+#try:
+    #loop()
+#except KeyboardInterrupt:
+    #destroy()
