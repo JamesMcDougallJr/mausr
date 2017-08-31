@@ -14,14 +14,15 @@ def distance():
     GPIO.output(trig,1)
     time.sleep(0.00001)
     GPIO.output(trig,0)
+    time1=time.time()
+    time2=time.time()
     while GPIO.input(echo)==0:
         a=0
         time1=time.time()
     while GPIO.input(echo)==1:
         a=1
         time2=time.time()
-    during=time2-time1
-    return during * 17000
+    return (time2-time1) *17000
 def loop():
     while True:
         dis=distance()

@@ -51,16 +51,23 @@ def Bbackwards():
 def Abackwards():
     GPIO.output(ain2,GPIO.HIGH)
     GPIO.output(ain1,GPIO.LOW)
-def right():
-    Bbackwards()
 def left():
+    Bbackwards()
+    Aforward()
+def right():
+    Bforward()
+    Abackwards()
 
 
 setupMotor()
-run()
-time.sleep(10)
-Bbackwards()
-Abackwards()
-time.sleep(5)
+#runall()
+#time.sleep(15)
+#Bbackwards()
+#Abackwards()
+#time.sleep(15)
+#right()
+#time.sleep(10)
+#left()
+#time.sleep(10)
 stop()
                                                                                                                                                                                                                                                                      
