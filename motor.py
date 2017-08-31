@@ -51,6 +51,9 @@ def Bbackwards():
 def Abackwards():
     GPIO.output(ain2,GPIO.HIGH)
     GPIO.output(ain1,GPIO.LOW)
+def allBack():
+    Bbackwards()
+    Abackwards()
 def left():
     Bbackwards()
     Aforward()

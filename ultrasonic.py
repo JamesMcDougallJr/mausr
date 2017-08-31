@@ -22,7 +22,7 @@ def distance():
     while GPIO.input(echo)==1:
         a=1
         time2=time.time()
-    return (time2-time1) *17000
+    return (time2-time1) *17150
 def loop():
     while True:
         dis=distance()
@@ -30,7 +30,7 @@ def loop():
         print ('')
         if dis < 10:
             return 0
-        time.sleep(0.3)
+        time.sleep(0.1)
         
         
 def destroy():
