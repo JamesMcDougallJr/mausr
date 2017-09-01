@@ -8,6 +8,16 @@ GPIO.setmode(GPIO.BOARD)
 if __name__==("__main__"):
     setup()
     setupMotor()
+#make this into a separate file
+def button():
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(btn,GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    while True:
+      input_state==False:
+          return 1 #button is pressed
+if button()==1 and GPIO.stby==False: #or whatever motor uses to stop
+    try: #the actual running of the function
+    
 runall()
 rightCounter=0
 while True:
@@ -22,9 +32,11 @@ while True:
             rightCounter+=1
             time.sleep(0.25)
         runall()
-    except KeyboardInterrupt:
+     except KeyboardInterrupt or (button()==0 and GPIO.stby==True):
+        
         stop()
         destroy()
+  
 
 
 
