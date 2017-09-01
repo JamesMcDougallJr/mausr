@@ -6,7 +6,6 @@ bpwm  = 7 #right top PWM
 apwm  = 40 #orange right bottom pwm
 ain2 = 38 #right motor when looking from behind
 ain1 = 36
-bpwm = 33
 slow = 20
 med = 50
 fast = 100
@@ -15,26 +14,25 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 #setup
 def setupMotor():
-    
+    GPIO.setmode(GPIO.BOARD)
     GPIO.setup(ain1,GPIO.OUT)
     GPIO.setup(ain2,GPIO.OUT)
-    GPIO.setup(PWA,GPIO.OUT)
 
     GPIO.setup(bin1,GPIO.OUT)
     GPIO.setup(bin2,GPIO.OUT)
-    GPIO.setup(PWB,GPIO.OUT)
-    GPIO.output(PWA,GPIO.HIGH)
-    GPIO.output(PWB,GPIO.HIGH)
-    #GPIO.setup(Bin1,GPIO.OUT)
-    #GPIO.setup(Bin2,GPIO.OUT)
-    GPIO.setup(Bpwm,GPIO.OUT)
+    
+    GPIO.setup(apwm,GPIO.OUT)
+    GPIO.setup(bpwm,GPIO.OUT)
+
+    GPIO.output(bpwm,GPIO.HIGH)
+    GPIO.output(apwm,GPIO.HIGH)
 #run the motor
 def runall():
-    GPIO.output(ain1,GPIO.HIGH)
+    setupMotor()
     GPIO.output(ain2,GPIO.LOW)
-
-    GPIO.output(bin1,GPIO.HIGH)
-    GPIO.output(bin2,GPIO.LOW)
+    GPIO.output(ain1,GPIO.HIGH)
+    GPIO.output(bin1,GPIO.LOW)
+    GPIO.output(bin2,GPIO.HIGH)
 def Aforward():
     GPIO.output(ain1,GPIO.HIGH)
     GPIO.output(ain2,GPIO.LOW)
@@ -63,12 +61,12 @@ def left():
 def right():
     Bforward()
     Abackwards()
-    
+"""   
 
-rightTopPWM = GPIO.PWM(Bin1,slow) #A
+rightTopPWM = GPIO.PWM(bin1,slow) #A
 rightTopPWM.ChangeFrequency(100)
 rightTopPWM.start(0)
-rightBottomPWM = GPIO.PWM(Bin2,slow) #B
+rightBottomPWM = GPIO.PWM(bin2,slow) #B
 rightBottomPWM.ChangeFrequency(100)
 rightBottomPWM.start(0)
 
@@ -112,3 +110,4 @@ if __name__ == '__main__':
 #time.sleep(10)
 #stop()
                                                                                                                                                                                                                                                                      
+"""
