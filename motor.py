@@ -12,7 +12,7 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 #setup
 def setupMotor():
-    
+    GPIO.setup(
     GPIO.setup(ain1,GPIO.OUT)
     GPIO.setup(ain2,GPIO.OUT)
     GPIO.setup(stby,GPIO.OUT)
@@ -60,9 +60,16 @@ def left():
 def right():
     Bforward()
     Abackwards()
+def slowDown():
+    pulse=GPIO.PWM(PWA,50)
+    pulse.start(0)
+    for dc in range(100,-1,-5):
+        pulse.ChangeDutyCycle(dc)
+        time.sleep(0.1)
+    
 
 
-setupMotor()
+#setupMotor()
 #runall()
 #time.sleep(15)
 #Bbackwards()
@@ -72,5 +79,5 @@ setupMotor()
 #time.sleep(10)
 #left()
 #time.sleep(10)
-stop()
+#stop()
                                                                                                                                                                                                                                                                      
