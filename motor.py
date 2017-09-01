@@ -1,21 +1,23 @@
 import RPi.GPIO as GPIO
 import time
-ain1 = 16 #purple the left motor
-ain2 = 18 #Yellow
-stby = 22
-PWA  = 7
-PWB  = 40 #orange
-bin2 = 38 #right motor when looking from behind
-bin1 = 36
+bin1 = 16 #purple the left motor
+bin2 = 18 #Yellow
+bpwm  = 7 #right top PWM
+apwm  = 40 #orange right bottom pwm
+ain2 = 38 #right motor when looking from behind
+ain1 = 36
+bpwm = 33
+slow = 20
+med = 50
+fast = 100
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 #setup
 def setupMotor():
-    GPIO.setup(
+    
     GPIO.setup(ain1,GPIO.OUT)
     GPIO.setup(ain2,GPIO.OUT)
-    GPIO.setup(stby,GPIO.OUT)
     GPIO.setup(PWA,GPIO.OUT)
 
     GPIO.setup(bin1,GPIO.OUT)
@@ -23,27 +25,28 @@ def setupMotor():
     GPIO.setup(PWB,GPIO.OUT)
     GPIO.output(PWA,GPIO.HIGH)
     GPIO.output(PWB,GPIO.HIGH)
- 
+    #GPIO.setup(Bin1,GPIO.OUT)
+    #GPIO.setup(Bin2,GPIO.OUT)
+    GPIO.setup(Bpwm,GPIO.OUT)
 #run the motor
 def runall():
-    
-    GPIO.output(stby,GPIO.HIGH)
     GPIO.output(ain1,GPIO.HIGH)
     GPIO.output(ain2,GPIO.LOW)
 
     GPIO.output(bin1,GPIO.HIGH)
     GPIO.output(bin2,GPIO.LOW)
 def Aforward():
-    GPIO.output(stby,GPIO.HIGH)
     GPIO.output(ain1,GPIO.HIGH)
     GPIO.output(ain2,GPIO.LOW)
 def Bforward():
-    GPIO.output(stby,GPIO.HIGH)
     GPIO.output(bin1,GPIO.HIGH)
     GPIO.output(bin2,GPIO.LOW)
 
 def stop():
-    GPIO.output(stby,GPIO.LOW)
+    GPIO.output(bin1,GPIO.LOW)
+    GPIO.output(bin2,GPIO.LOW)
+    GPIO.output(ain1,GPIO.LOW)
+    GPIO.output(ain2,GPIO.LOW)
     
 def Bbackwards():
     GPIO.output(bin2,GPIO.HIGH)
@@ -60,14 +63,42 @@ def left():
 def right():
     Bforward()
     Abackwards()
-def slowDown():
-    pulse=GPIO.PWM(PWA,50)
-    pulse.start(0)
-    for dc in range(100,-1,-5):
-        pulse.ChangeDutyCycle(dc)
-        time.sleep(0.1)
     
 
+rightTopPWM = GPIO.PWM(Bin1,slow) #A
+rightTopPWM.ChangeFrequency(100)
+rightTopPWM.start(0)
+rightBottomPWM = GPIO.PWM(Bin2,slow) #B
+rightBottomPWM.ChangeFrequency(100)
+rightBottomPWM.start(0)
+
+#PWM Parameters
+
+def forward(speed=med):
+    rightTopPWM.ChangeDutyCycle(speed)
+    rightBottomPWM.ChangeDutyCycle(0)
+def reverse(speed=med):
+    rightTopPWM.ChangeDutyCycle(0)
+    rightBottomPWM.ChangeDutyCycle(speed)
+def stop():
+    rightTopPWM.ChangeDutyCycle(0)
+    rightBottomPWM.ChangeDutyCycle(0)
+if __name__ == '__main__':
+    setupMotor()
+    try:
+        while True:
+            forward(slow)
+            time.sleep(2)
+            reverse(med)
+            time.sleep(2)
+            forward(fast)
+            time.sleep(2)
+            stop()
+            time.sleep(2)
+    except KeyboardInterrupt:
+        stop()
+        print("program stopped")
+        GPIO.cleanup()
 
 #setupMotor()
 #runall()

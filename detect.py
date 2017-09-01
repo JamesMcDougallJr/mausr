@@ -3,6 +3,7 @@ import RPi.GPIO as GPIO
 import time
 from motor import runall, stop, allBack, setupMotor, right, left
 from ultrasonic import setup, destroy, loop
+from speecontrol import forward,reverse,stop
 GPIO.setmode(GPIO.BOARD)
 if __name__==("__main__"):
     setup()
