@@ -2,7 +2,7 @@
 import RPi.GPIO as GPIO
 import time
 from motor import stop, allBack, right, left
-from ultrasonic import destroy
+#from ultrasonic import destroy
 #from speedcontrol import forward,reverse,stop
 bin1 = 16 #purple the left motor
 bin2 = 18 #Yellow
@@ -19,7 +19,7 @@ def setup():
     GPIO.setup(trig,GPIO.OUT)
     GPIO.setup(echo,GPIO.IN)
 def distance():
-
+    GPIO.setmode(GPIO.BOARD)
     GPIO.output(trig,GPIO.LOW)
     time.sleep(.5)
     GPIO.output(trig,GPIO.HIGH)
@@ -63,11 +63,10 @@ def runall():
     GPIO.output(bin1,GPIO.LOW)
     GPIO.output(bin2,GPIO.HIGH)
 
-    
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BOARD)    
 setup()
 setupMotor()
-time.sleep(10)
+time.sleep(2)
 runall()
 rightCounter=0
 while True:
@@ -83,7 +82,7 @@ while True:
         runall()
     except KeyboardInterrupt:
          stop()
-         destroy()
+         GPIO.cleanup()
 
 
 

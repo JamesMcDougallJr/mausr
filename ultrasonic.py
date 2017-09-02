@@ -17,7 +17,8 @@ def distance():
     GPIO.output(trig,GPIO.HIGH)
     time.sleep(0.00001)
     GPIO.output(trig,GPIO.LOW)
-    
+    time1=time.time()
+    time2=time.time()
     while GPIO.input(echo)==0:
         time1=time.time()
     while GPIO.input(echo)==1:
