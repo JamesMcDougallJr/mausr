@@ -1,7 +1,7 @@
 #!/usr/bin/env/python
 import RPi.GPIO as GPIO
 import time
-from motor import stop, allBack, right, left
+#from motor import stop, allBack, right, left
 #from speedcontrol import forward,reverse,stop
 bin1 = 16 #purple the left motor
 bin2 = 18 #Yellow
@@ -23,11 +23,8 @@ def measureRotations():
     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     counter = 0
     clkLastState = GPIO.input(clk)
-
     clkState = GPIO.input(clk)
     dtState = GPIO.input(dt)
-    if GPIO.input(clk)==False and GPIO.input(dt)==False:
-        return 0
     if clkState != clkLastState:
         if dtState != clkState:
             counter += 1
@@ -35,6 +32,7 @@ def measureRotations():
             counter -= 1
     print (counter)
     clkLastState = clkState
+    return clkState   
     time.sleep(0.01)
 def setup():
     GPIO.setup(trig,GPIO.OUT)
@@ -42,7 +40,7 @@ def setup():
 def distance():
     GPIO.setmode(GPIO.BOARD)
     GPIO.output(trig,GPIO.LOW)
-    time.sleep(.5)
+    time.sleep(0.4)
     GPIO.output(trig,GPIO.HIGH)
     time.sleep(0.00001)
     GPIO.output(trig,GPIO.LOW)
@@ -63,7 +61,7 @@ def loop():
                pass
            else:
                return 0
-       time.sleep(0.1)
+       time.sleep(0.01)
 def setupMotor():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(ain1,GPIO.OUT)
@@ -120,12 +118,6 @@ runall()
 rightCounter=0
 while True:
     try:
-        if measureRotations()==0:
-            stop()
-            allBack()
-            time.sleep(1)
-            left()
-            time.sleep(.5)            
         if loop()==0:
             if rightCounter >=5:
                 rightCounter=0
