@@ -2,19 +2,40 @@
 import RPi.GPIO as GPIO
 import time
 from motor import stop, allBack, right, left
-#from ultrasonic import destroy
 #from speedcontrol import forward,reverse,stop
 bin1 = 16 #purple the left motor
 bin2 = 18 #Yellow
-bpwm  = 7 #right top PWM
-apwm  = 40 #orange right bottom pwm
+bpwm = 7 #right top PWM
+apwm = 40 #orange right bottom pwm
 ain2 = 38 #right motor when looking from behind
 ain1 = 36
 slow = 20
-med = 50
+med  = 50
 fast = 100
 trig=11 #orange
 echo=12 #white
+
+clk = 13
+dt = 19
+def measureRotations():
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    counter = 0
+    clkLastState = GPIO.input(clk)
+
+    clkState = GPIO.input(clk)
+    dtState = GPIO.input(dt)
+    if GPIO.input(clk)==False and GPIO.input(dt)==False:
+        return 0
+    if clkState != clkLastState:
+        if dtState != clkState:
+            counter += 1
+        else:
+            counter -= 1
+    print (counter)
+    clkLastState = clkState
+    time.sleep(0.01)
 def setup():
     GPIO.setup(trig,GPIO.OUT)
     GPIO.setup(echo,GPIO.IN)
@@ -62,8 +83,36 @@ def runall():
     GPIO.output(ain1,GPIO.HIGH)
     GPIO.output(bin1,GPIO.LOW)
     GPIO.output(bin2,GPIO.HIGH)
+def Aforward():
+    GPIO.output(ain1,GPIO.HIGH)
+    GPIO.output(ain2,GPIO.LOW)
+def Bforward():
+    GPIO.output(bin1,GPIO.HIGH)
+    GPIO.output(bin2,GPIO.LOW)
 
-GPIO.setmode(GPIO.BOARD)    
+def stop():
+    GPIO.output(bin1,GPIO.LOW)
+    GPIO.output(bin2,GPIO.LOW)
+    GPIO.output(ain1,GPIO.LOW)
+    GPIO.output(ain2,GPIO.LOW)
+    
+def Bbackwards():
+    GPIO.output(bin2,GPIO.HIGH)
+    GPIO.output(bin1,GPIO.LOW)
+def Abackwards():
+    GPIO.output(ain2,GPIO.HIGH)
+    GPIO.output(ain1,GPIO.LOW)
+def allBack():
+    Bbackwards()
+    Abackwards()
+def left():
+    Bbackwards()
+    Aforward()
+def right():
+    Bforward()
+    Abackwards()
+    
+GPIO.setmode(GPIO.BOARD)
 setup()
 setupMotor()
 time.sleep(2)
@@ -71,6 +120,12 @@ runall()
 rightCounter=0
 while True:
     try:
+        if measureRotations()==0:
+            stop()
+            allBack()
+            time.sleep(1)
+            left()
+            time.sleep(.5)            
         if loop()==0:
             if rightCounter >=5:
                 rightCounter=0

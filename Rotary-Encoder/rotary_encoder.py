@@ -2,7 +2,8 @@ from RPi import GPIO
 from time import sleep
 
 clk = 13
-dt = 19 
+dt = 19
+def measureRotations()
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -20,7 +21,7 @@ try:
                                 counter += 1
                         else:
                                 counter -= 1
-                        print counter
+                        print (counter)
                 clkLastState = clkState
                 sleep(0.01)
 finally:
