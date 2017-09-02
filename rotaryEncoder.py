@@ -22,7 +22,7 @@ def rotaryDeal():
     global Last_RoB_Status
     global Current_RoB_Status
     global globalCounter
-    Last_RoB_Status=GPIO.input(RoBPin)
+    Last_RoB_Status=GPIO.input(clk)
     while(not GPIO.input(dt)):
         Current_RoB_Status=GPIO.input(clk)
         flag=1
@@ -39,7 +39,12 @@ def clear(ev=None):
     print('globalCounter=%d')%globalCounter
     time.sleep(1)
 def rotaryClear():
-    GPIO.add_event_detect(RoSPin,GPIO.FALLING,callback=clear)
+    GPIO.add_event_detect(sw,GPIO.FALLING,callback=clear)
+def loop():
+    global globalCounter
+    while True:
+        rotaryDeal()
+        print('globalCounter=%d') % globalCounter 
 def destroy():
     GPIO.cleanup()
 if __name__==('__main__'):
@@ -47,5 +52,4 @@ if __name__==('__main__'):
     try:
         loop()
     except KeyboardInterrupt:
-        destroy()
-    
+       destroy()
