@@ -15,7 +15,7 @@ def measureRotations():
     GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     counter=0
-    fuckingshitcounter=0
+    same=0
     clkLastState = GPIO.input(clk)
     while True:
         
@@ -27,8 +27,8 @@ def measureRotations():
             else:
                 counter-= 1
         else:
-            print ('its the same fucking shit')
-            fuckingshitcounter+=1
+            print ('its the same')
+            same+=1
         print(counter)
         clkLastState = clkState 
         time.sleep(0.1)
