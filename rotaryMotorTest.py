@@ -15,23 +15,17 @@ def measureRotations():
     GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     counter=0
-    same=0
+    #global same
+    #same=0
     clkLastState = GPIO.input(clk)
     while True:
-        
         clkState = GPIO.input(clk)
         dtState = GPIO.input(dt)
         if clkState != clkLastState:
             if dtState != clkState:
                 counter+= 1
-            else:
-                counter-= 1
-        else:
-            print ('its the same')
-            same+=1
-        print(counter)
+                print(counter)
         clkLastState = clkState 
-        time.sleep(0.1)
 bin1 = 16 #purple the left motor
 bin2 = 18 #Yellow
 bpwm = 7 #right top PWM
@@ -60,9 +54,11 @@ def runall():
     GPIO.output(bin2,GPIO.HIGH)
 if __name__==('__main__'):
     setupMotor()
-while True:
-    try:
-        runall()
-        measureRotations()
-    except KeyboardInterrupt:
-        stop()
+    same=0
+try:
+    runall()
+    measureRotations()
+    
+except KeyboardInterrupt:
+    stop()
+    print('The # sames is',same)

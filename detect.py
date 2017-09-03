@@ -14,29 +14,31 @@ med  = 50
 fast = 100
 trig=11 #orange
 echo=12 #white
-
 clk = 13
 dt = 19
 def measureRotations():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    counter = 0
+    counter=0
+    stoppedCounter=0
     clkLastState = GPIO.input(clk)
-    clkState = GPIO.input(clk)
-    dtState = GPIO.input(dt)
-    if clkState != clkLastState:
-        if dtState != clkState:
-            counter += 1
-        else:
-            counter -= 1
-    print (counter)
-    clkLastState = clkState
-    return clkState   
-    time.sleep(0.01)
+    while True:
+        clkState = GPIO.input(clk)
+        dtState = GPIO.input(dt)
+        if clkState != clkLastState:
+            if dtState != clkState:
+                counter+= 1
+                print(counter)
+        if clkState==clkClastState:
+            stoppedCounter+=1
+        clkLastState = clkState 
 def setup():
+    GPIO.setwarnings(False)
     GPIO.setup(trig,GPIO.OUT)
     GPIO.setup(echo,GPIO.IN)
+    GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 def distance():
     GPIO.setmode(GPIO.BOARD)
     GPIO.output(trig,GPIO.LOW)
@@ -116,8 +118,30 @@ setupMotor()
 time.sleep(2)
 runall()
 rightCounter=0
+counter=0
+stoppedCounter=0
+clkLastState = GPIO.input(clk)
 while True:
+    GPIO.setmode(GPIO.BOARD)
     try:
+        measureRotations()
+        #clkState=GPIO.input(clk)
+        #dtState=GPIO.input(dt)
+        #if clkState !=clkLastState:
+            #if dtState != clkState:
+                #counter+= 1
+                #print(counter)
+                
+        #if clkState==clkLastState:
+            #stoppedCounter+=1
+            
+        #clkLastState = clkState
+        
+        #if stoppedCounter >=3:
+            #allBack()
+            #time.sleep(2)
+            #left()
+            
         if loop()==0:
             if rightCounter >=5:
                 rightCounter=0
@@ -128,9 +152,8 @@ while True:
             time.sleep(0.25)
         runall()
     except KeyboardInterrupt:
-         stop()
-         GPIO.cleanup()
-
+        stop()
+        GPIO.cleanup()
 
 
 
