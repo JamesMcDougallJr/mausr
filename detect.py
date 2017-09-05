@@ -16,23 +16,20 @@ trig=11 #orange
 echo=12 #white
 clk = 13
 dt = 19
-def measureRotations():
+def measureRotations(counter,lastState):
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    counter=0
-    stoppedCounter=0
-    clkLastState = GPIO.input(clk)
-    while True:
-        clkState = GPIO.input(clk)
-        dtState = GPIO.input(dt)
-        if clkState != clkLastState:
-            if dtState != clkState:
-                counter+= 1
-                print(counter)
-        if clkState==clkClastState:
-            stoppedCounter+=1
-        clkLastState = clkState 
+    clkState = GPIO.input(clk)
+    dtState = GPIO.input(dt)
+    if clkState != lastState:
+        if dtState != clkState:
+            lastState = clkState
+        counter+=1
+    print(counter)
+    return (counter,lastState)
+    
+    
 def setup():
     GPIO.setwarnings(False)
     GPIO.setup(trig,GPIO.OUT)
@@ -57,7 +54,7 @@ def distance():
 def loop():
     while True:
        dis=distance()
-       print(dis,'cm','')
+       #print(dis,'cm','')
        if dis <10.0:
            if dis < 1.0:
                pass
@@ -119,29 +116,19 @@ time.sleep(2)
 runall()
 rightCounter=0
 counter=0
-stoppedCounter=0
-clkLastState = GPIO.input(clk)
+laststate = GPIO.input(clk)
+rotationState=0
+LastrotationState=GPIO.input(clk)
 while True:
     GPIO.setmode(GPIO.BOARD)
     try:
-        measureRotations()
-        #clkState=GPIO.input(clk)
-        #dtState=GPIO.input(dt)
-        #if clkState !=clkLastState:
-            #if dtState != clkState:
-                #counter+= 1
-                #print(counter)
-                
-        #if clkState==clkLastState:
-            #stoppedCounter+=1
-            
-        #clkLastState = clkState
-        
-        #if stoppedCounter >=3:
-            #allBack()
-            #time.sleep(2)
-            #left()
-            
+        [rotationCounter,rotationstate]=measureRotations(counter,laststate)
+        if rotationstate==LastrotationState:
+            lastrotationState=rotationState            
+            allBack()
+            time.sleep(1)
+            left()
+            time.sleep(.5)
         if loop()==0:
             if rightCounter >=5:
                 rightCounter=0
