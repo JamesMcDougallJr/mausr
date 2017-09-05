@@ -1,8 +1,6 @@
 #!/usr/bin/env/python
 import RPi.GPIO as GPIO
 import time
-#from motor import stop, allBack, right, left
-#from speedcontrol import forward,reverse,stop
 bin1 = 16 #purple the left motor
 bin2 = 18 #Yellow
 bpwm = 7 #right top PWM
@@ -125,8 +123,8 @@ while True:
     GPIO.setmode(GPIO.BOARD)
     try:
         measureRotations()
-        #clkState=GPIO.input(clk)
-        #dtState=GPIO.input(dt)
+        clkState=GPIO.input(clk)
+        dtState=GPIO.input(dt)
         #if clkState !=clkLastState:
             #if dtState != clkState:
                 #counter+= 1
