@@ -24,7 +24,8 @@ def measureRotations():
             if dtState != clkState:
                 counter+= 1
                 print(counter)
-        clkLastState = clkState 
+        clkLastState = clkState
+    
 bin1 = 16 #purple the left motor
 bin2 = 18 #Yellow
 bpwm = 7 #right top PWM
