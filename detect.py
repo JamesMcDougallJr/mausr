@@ -123,11 +123,9 @@ counter=0
 clkLastState = GPIO.input(clk)
 while True:
     try:
-        if(ser.inWaiting()>0):
-            myData=ser.readline()
-            stop()
+        if ser.inWaiting()>0:
             allBack()
-            time.sleep(2)
+            time.sleep(1)
             runall()
         if loop()==0:
             if rightCounter >=5:

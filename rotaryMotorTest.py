@@ -15,8 +15,6 @@ def measureRotations():
     GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     counter=0
-    #global same
-    #same=0
     clkLastState = GPIO.input(clk)
     while True:
         clkState = GPIO.input(clk)
