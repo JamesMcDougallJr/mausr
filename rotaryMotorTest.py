@@ -1,23 +1,24 @@
-"""if measureRotations()==0:
-            stop()
-            allBack()
-            time.sleep(1)
-            left()
-            time.sleep(.5)     """
 import RPi.GPIO as GPIO
 import time
 from motor import stop
 clk = 13
 dt = 19
 counter = 0
+clk2=35
+dt2=33
+
 def measureRotations():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(clk2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(dt2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     counter=0
     clkLastState = GPIO.input(clk)
     while True:
         clkState = GPIO.input(clk)
+        clkState2=GPIO.input(clk2)
+        dtState2=GPIO.input(dt2)
         dtState = GPIO.input(dt)
         if clkState != clkLastState:
             if dtState != clkState:

@@ -19,6 +19,8 @@ trig=11 #orange
 echo=12 #white
 clk = 13
 dt = 19
+brakeLED=37
+
 def measureRotations(counter,lastState):
     GPIO.setmode(GPIO.BOARD)
 
@@ -32,11 +34,33 @@ def measureRotations(counter,lastState):
     tup=(counter,lastState)
     return tup    
 def setup():
+    GPIO.setmode(GPIO.BOARD)
     GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setwarnings(False)
     GPIO.setup(trig,GPIO.OUT)
     GPIO.setup(echo,GPIO.IN)
+    GPIO.setup(brakeLED,GPIO.OUT)
+    GPIO.setup(bin1,GPIO.OUT)
+    GPIO.setup(bin2,GPIO.OUT)
+    GPIO.setup(bpwm,GPIO.OUT)
+def brakesOn():
+    pulse= GPIO.PWM(brakeLED,50)
+    pulse.start(0)
+    for dc in range(0,101,5):
+        pulse.ChangeDutyCycle(dc)
+        time.sleep(0.01)
+    pulse.stop()
+def brakesOff():
+    pulse=GPIO.PWM(brakeLED,50)
+    pulse.start(0)
+    for dc in range(100,-1,-5):
+        pulse.ChangeDutyCycle(dc)
+        time.sleep(0.01)
+    pulse.stop()
+def stopSlowly(speed=20):
+    rightTopPWM.ChangeDutyCycle(speed)
+    rightBottomPWM.ChangeDutyCycle(0)
 def distance():
     GPIO.setmode(GPIO.BOARD)
     GPIO.output(trig,GPIO.LOW)
@@ -55,7 +79,6 @@ def distance():
 def loop():
     while True:
        dis=distance()
-       #print(dis,'cm','')
        if dis <10.0:
            if dis < 1.0:
                pass
@@ -109,32 +132,29 @@ def left():
 def right():
     Bforward()
     Abackwards()
-    
-GPIO.setmode(GPIO.BOARD)
 setup()
 setupMotor()
 runall()
 rightCounter=0
-lastState = GPIO.input(clk)
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-counter=0
-clkLastState = GPIO.input(clk)
 while True:
     try:
-        if ser.inWaiting()>0:
-            allBack()
-            time.sleep(1)
-            runall()
+        if ser.inWaiting()>0: 
+                allBack()
+                time.sleep(0.5)
+                runall()
         if loop()==0:
+            stop()
             if rightCounter >=5:
                 rightCounter=0
                 allBack()
-                time.sleep(2)
+                time.sleep(1)
+            brakesOn()
+            time.sleep(0.2)
+            brakesOff()
             right()
             rightCounter+=1
-            time.sleep(0.25)
+            time.sleep(0.1)
         runall()
     except KeyboardInterrupt:
         stop()
