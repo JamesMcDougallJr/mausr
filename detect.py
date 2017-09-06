@@ -2,6 +2,8 @@
 import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BOARD)
+import serial
+ser=serial.Serial('/dev/ttyACM0',9600)
 #from motor import stop, allBack, right, left
 #from speedcontrol import forward,reverse,stop
 bin1 = 16 #purple the left motor
@@ -38,7 +40,7 @@ def setup():
 def distance():
     GPIO.setmode(GPIO.BOARD)
     GPIO.output(trig,GPIO.LOW)
-    time.sleep(0.004)
+    time.sleep(0.0004)
     GPIO.output(trig,GPIO.HIGH)
     time.sleep(0.00001)
     GPIO.output(trig,GPIO.LOW)
@@ -120,24 +122,25 @@ GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 counter=0
 clkLastState = GPIO.input(clk)
 while True:
-    clkState = GPIO.input(clk)
-    dtState = GPIO.input(dt)
-    if clkState != clkLastState:
-        if dtState != clkState:
-             counter+= 1
-             print(counter)
-    clkLastState = clkState
-    """
-    if loop()==0:
-        if rightCounter >=5:
-            rightCounter=0
+    try:
+        if(ser.inWaiting()>0):
+            myData=ser.readline()
+            stop()
             allBack()
             time.sleep(2)
-        right()
-        rightCounter+=1
-        time.sleep(0.25)
-    runall()
-"""
+            runall()
+        if loop()==0:
+            if rightCounter >=5:
+                rightCounter=0
+                allBack()
+                time.sleep(2)
+            right()
+            rightCounter+=1
+            time.sleep(0.25)
+        runall()
+    except KeyboardInterrupt:
+        stop()
+        GPIO.cleanup()
 
 
 
