@@ -1,4 +1,4 @@
-#!/usr/bin/env/python
+#luu/usr/bin/env/python
 import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BOARD)
@@ -137,32 +137,31 @@ GPIO.setmode(GPIO.BOARD)
 stuckTime2=time.time()
 stuckTime1=time.time()
 while True:
+    
     try:
         if stuckTime2-stuckTime1 > 10:
             allBack()
             time.sleep(2)
-        #if ser.inWaiting()>0:
-            #myData=ser.readline()
-            #stop()
-            #allBack()
-            #time.sleep(2)
-            #runall()
         stuckTime1=time.time()
         if loop()==0:
+            
             stuckTime2=time.time()
+            
             if rightCounter >=5:
                 rightCounter=0
                 allBack()
-                time.sleep(1)
+		time.sleep(1)
+		left()
+                time.sleep(0.1)
             brakesOn()
             brakesOff()
             right()
+	    time.sleep(0.1)
             rightCounter+=1
-            time.sleep(1)
         runall()
     except KeyboardInterrupt:
+        
         stop()
-        GPIO.cleanup()
 
 
 
