@@ -2,8 +2,6 @@
 import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BOARD)
-import serial
-#ser=serial.Serial('/dev/ttyACM0',9600)
 GPIO.setwarnings(False)
 bin1 = 16 #purple the left motor
 bin2 = 18 #Yellow
@@ -16,28 +14,13 @@ med  = 80
 fast = 100
 trig=11 #orange
 echo=12 #white
-#clk = 13
-#dt = 19
 brakeLED=37
 GPIO.setup(ain1,GPIO.OUT)
 GPIO.setup(ain2,GPIO.OUT)
 GPIO.setup(apwm,GPIO.OUT)
 
-def measureRotations(counter,lastState):
-    GPIO.setmode(GPIO.BOARD)
-    clkState = GPIO.input(clk)
-    dtState = GPIO.input(dt)
-    if clkState != lastState:
-        if dtState != clkState:
-            counter+=1
-            print(counter)
-    lastState = clkState
-    tup=(counter,lastState)
-    return tup    
 def setup():
     GPIO.setmode(GPIO.BOARD)
-    #GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    #GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setwarnings(False)
     GPIO.setup(trig,GPIO.OUT)
     GPIO.setup(echo,GPIO.IN)
@@ -102,8 +85,8 @@ def runall():
     Aforward()
     Bforward()
 def Aforward():
-    GPIO.output(ain1,GPIO.HIGH)
-    GPIO.output(ain2,GPIO.LOW)
+    GPIO.output(ain2,GPIO.HIGH)
+    GPIO.output(ain1,GPIO.LOW)
 def Bforward():
     GPIO.output(bin1,GPIO.HIGH)
     GPIO.output(bin2,GPIO.LOW)
@@ -141,30 +124,28 @@ setupMotor()
 runall()
 rightCounter=0
 GPIO.setmode(GPIO.BOARD)
-stuckTime2=time.time()
-stuckTime1=time.time()
+#stuckTime2=time.time()
+#stuckTime1=time.time()
 
 while True:
     try:
-        '''if stuckTime2-stuckTime1 > 10:
-            allBack()
-            time.sleep(2)
-        stuckTime1=time.time()
+        #if stuckTime2-stuckTime1 > 10:
+            #allBack()
+            #time.sleep(2)
+        #stuckTime1=time.time()
         if loop()==0:
-            
-            stuckTime2=time.time()'''
-            
-        if rightCounter >=5:
-            rightCounter=0
-            allBack()
-            time.sleep(1)
-            left()
+            #stuckTime2=time.time()
+            if rightCounter >=2:
+                rightCounter=0
+                allBack()
+                time.sleep(0.5)
+                left()
+                time.sleep(0.1)
+            #brakesOn()
+            #brakesOff()
+            right()
             time.sleep(0.1)
-        brakesOn()
-        brakesOff()
-        right()
-        time.sleep(0.1)
-        rightCounter+=1
+            rightCounter+=1
         runall()
     except KeyboardInterrupt:
         stop()
