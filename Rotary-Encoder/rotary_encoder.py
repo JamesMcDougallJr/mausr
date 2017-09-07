@@ -10,19 +10,22 @@ GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 counter = 0
 clkLastState = GPIO.input(clk)
-
+def inches(counter):
+        inch=counter*4/15
+        print(inch)
+def rotationsCount(inch):
+        return inch * 15 /4
+  
 try:
-
-        while True:
+        click=rotationsCount(12)           
+        while  click != 0:
+                click-=1
                 clkState = GPIO.input(clk)
                 dtState = GPIO.input(dt)
                 if clkState != clkLastState:
                         if dtState != clkState:
                                 counter += 1
-                        else:
-                                counter -= 1
-                        print (counter)
+                                print (counter)
                 clkLastState = clkState
-                sleep(0.01)
 finally:
         GPIO.cleanup()

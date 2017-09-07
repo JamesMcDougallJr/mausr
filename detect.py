@@ -3,9 +3,8 @@ import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BOARD)
 import serial
-ser=serial.Serial('/dev/ttyACM0',9600)
-#from motor import stop, allBack, right, left
-#from speedcontrol import forward,reverse,stop
+#ser=serial.Serial('/dev/ttyACM0',9600)
+GPIO.setwarnings(False)
 bin1 = 16 #purple the left motor
 bin2 = 18 #Yellow
 bpwm = 7 #right top PWM
@@ -13,17 +12,19 @@ apwm = 40 #orange right bottom pwm
 ain2 = 38 #right motor when looking from behind
 ain1 = 36
 slow = 20
-med  = 50
+med  = 80
 fast = 100
 trig=11 #orange
 echo=12 #white
-clk = 13
-dt = 19
+#clk = 13
+#dt = 19
 brakeLED=37
+GPIO.setup(ain1,GPIO.OUT)
+GPIO.setup(ain2,GPIO.OUT)
+GPIO.setup(apwm,GPIO.OUT)
 
 def measureRotations(counter,lastState):
     GPIO.setmode(GPIO.BOARD)
-
     clkState = GPIO.input(clk)
     dtState = GPIO.input(dt)
     if clkState != lastState:
@@ -35,8 +36,8 @@ def measureRotations(counter,lastState):
     return tup    
 def setup():
     GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    #GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    #GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setwarnings(False)
     GPIO.setup(trig,GPIO.OUT)
     GPIO.setup(echo,GPIO.IN)
@@ -47,7 +48,7 @@ def setup():
 def brakesOn():
     pulse= GPIO.PWM(brakeLED,50)
     pulse.start(0)
-    for dc in range(0,101,5):
+    for dc in range(0,101,1):
         pulse.ChangeDutyCycle(dc)
         time.sleep(0.01)
     pulse.stop()
@@ -58,13 +59,11 @@ def brakesOff():
         pulse.ChangeDutyCycle(dc)
         time.sleep(0.01)
     pulse.stop()
-def stopSlowly(speed=20):
-    rightTopPWM.ChangeDutyCycle(speed)
-    rightBottomPWM.ChangeDutyCycle(0)
+
 def distance():
     GPIO.setmode(GPIO.BOARD)
     GPIO.output(trig,GPIO.LOW)
-    time.sleep(0.0004)
+    time.sleep(0.4)
     GPIO.output(trig,GPIO.HIGH)
     time.sleep(0.00001)
     GPIO.output(trig,GPIO.LOW)
@@ -100,10 +99,8 @@ def setupMotor():
     GPIO.output(apwm,GPIO.HIGH)
 #run the motor
 def runall():
-    GPIO.output(ain2,GPIO.LOW)
-    GPIO.output(ain1,GPIO.HIGH)
-    GPIO.output(bin1,GPIO.LOW)
-    GPIO.output(bin2,GPIO.HIGH)
+    Aforward()
+    Bforward()
 def Aforward():
     GPIO.output(ain1,GPIO.HIGH)
     GPIO.output(ain2,GPIO.LOW)
@@ -116,7 +113,7 @@ def stop():
     GPIO.output(bin2,GPIO.LOW)
     GPIO.output(ain1,GPIO.LOW)
     GPIO.output(ain2,GPIO.LOW)
-    
+    GPIO.cleanup()
 def Bbackwards():
     GPIO.output(bin2,GPIO.HIGH)
     GPIO.output(bin1,GPIO.LOW)
@@ -137,24 +134,31 @@ setupMotor()
 runall()
 rightCounter=0
 GPIO.setmode(GPIO.BOARD)
+stuckTime2=time.time()
+stuckTime1=time.time()
 while True:
     try:
-        if ser.inWaiting()>0: 
-                allBack()
-                time.sleep(0.5)
-                runall()
+        if stuckTime2-stuckTime1 > 10:
+            allBack()
+            time.sleep(2)
+        #if ser.inWaiting()>0:
+            #myData=ser.readline()
+            #stop()
+            #allBack()
+            #time.sleep(2)
+            #runall()
+        stuckTime1=time.time()
         if loop()==0:
-            stop()
+            stuckTime2=time.time()
             if rightCounter >=5:
                 rightCounter=0
                 allBack()
                 time.sleep(1)
             brakesOn()
-            time.sleep(0.2)
             brakesOff()
             right()
             rightCounter+=1
-            time.sleep(0.1)
+            time.sleep(1)
         runall()
     except KeyboardInterrupt:
         stop()
