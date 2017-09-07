@@ -15,9 +15,6 @@ fast = 100
 trig=11 #orange
 echo=12 #white
 brakeLED=37
-GPIO.setup(ain1,GPIO.OUT)
-GPIO.setup(ain2,GPIO.OUT)
-GPIO.setup(apwm,GPIO.OUT)
 
 def setup():
     GPIO.setmode(GPIO.BOARD)
@@ -25,9 +22,6 @@ def setup():
     GPIO.setup(trig,GPIO.OUT)
     GPIO.setup(echo,GPIO.IN)
     GPIO.setup(brakeLED,GPIO.OUT)
-    GPIO.setup(bin1,GPIO.OUT)
-    GPIO.setup(bin2,GPIO.OUT)
-    GPIO.setup(bpwm,GPIO.OUT)
 def brakesOn():
     pulse= GPIO.PWM(brakeLED,50)
     pulse.start(0)
@@ -81,6 +75,7 @@ def runall():
     Aforward()
     Bforward()
 def Aforward():
+    setupMotor()
     GPIO.output(ain2,GPIO.HIGH)
     GPIO.output(ain1,GPIO.LOW)
 def Bforward():
@@ -94,16 +89,16 @@ def stop():
     GPIO.output(ain2,GPIO.LOW)
     GPIO.cleanup()
 def Bbackwards():
-    brakesOn()    
+    #brakesOn()    
     GPIO.output(bin2,GPIO.HIGH)
     GPIO.output(bin1,GPIO.LOW)
-    brakesOff()
+    #brakesOff()
 def Abackwards():
-    brakesOn()
+    #brakesOn()
     
     GPIO.output(ain2,GPIO.LOW)
     GPIO.output(ain1,GPIO.HIGH)
-    brakesOff()
+    #brakesOff()
 def allBack():
     brakesOn()
     Bbackwards()
@@ -115,12 +110,13 @@ def left():
 def right():
     Bforward()
     Abackwards()
-setup()
 setupMotor()
 runall()
 rightCounter=0
 GPIO.setmode(GPIO.BOARD)
 while True:
+    setup()
+    setupMotor()
     try:
         if loop()==0:
             right()
@@ -128,7 +124,7 @@ while True:
                 rightCounter=0
                 allBack()
                 time.sleep(0.25)
-		stop()
+                stop()
                 time.sleep(0.1)
             time.sleep(0.1)
             rightCounter+=1

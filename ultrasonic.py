@@ -13,7 +13,7 @@ def setup():
 def distance():
 
     GPIO.output(trig,GPIO.LOW)
-    time.sleep(0.5)
+    time.sleep(0.35)
     GPIO.output(trig,GPIO.HIGH)
     time.sleep(0.00001)
     GPIO.output(trig,GPIO.LOW)
@@ -30,11 +30,8 @@ def loop():
        dis=distance()
        print(dis,'cm','')
        if dis <10.0:
-           if dis < 1.0:
-               pass
-           else:
-               return 0
-       time.sleep(0.3)
+            return 0
+
 def destroy():
     GPIO.cleanup()
 
