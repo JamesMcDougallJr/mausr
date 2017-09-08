@@ -159,18 +159,18 @@ while True:
             runall()
         if loop()==0:
             right()
-            time.sleep(0.5)
+            time.sleep(0.075)
             if loop2()==0: #if the ultrasonic notices something within 10 cm returns 0
                 stop()
                 left()
                 time.sleep(0.5)
                 runall()
     
-            else:
-                stop()
-                right()
-                time.sleep(0.5)
-                runall()
+#k            else:
+ #               stop()
+ #               right()
+ #               time.sleep(0.5)
+            runall()
             if rightCounter >=2: #if it tries to turn right more than once, try something else
                 rightCounter=0
                 allBack()
