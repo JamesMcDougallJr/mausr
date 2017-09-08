@@ -2,7 +2,7 @@
 
 import time
 import RPi.GPIO as GPIO
-from motor import setupMotor,stop,left,right
+from motor import setupMotor,stop,left,right,Aforward
 #PWMforward()
 ain2 = 38 #right motor when looking from behind
 ain1 = 36
@@ -19,12 +19,7 @@ def runall():
 
 
 setupMotor()
-GPIO.output(ain1,GPIO.HIGH)
-GPIO.output(ain2,GPIO.LOW)
-time.sleep(5)
+Aforward()
+time.sleep(2)
 stop()
-runall()
-time.sleep(3)
-right()
-time.sleep
-stop()
+
