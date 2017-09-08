@@ -44,6 +44,7 @@ def brakesOff():
     pulse.stop()
 
 def distance():
+    setup()
     GPIO.setmode(GPIO.BOARD)
     GPIO.output(trig,GPIO.LOW)
     time.sleep(0.35)
@@ -61,9 +62,11 @@ def distance():
 def loop():
     while True:
        dis=distance()
+       print(dis,'cm','')
        if dis <20.0:
            return 0
 def distance2():
+    setup()
     GPIO.output(trig2,GPIO.LOW)
     time.sleep(0.35)
     GPIO.output(trig2,GPIO.HIGH)
@@ -77,9 +80,7 @@ def distance2():
         time2=time.time()
     pulse_duration=time2-time1   
     return pulse_duration * 17150 
-def loop2():
-    while True:
-        
+def loop2():        
        dis=distance2()
        print(dis,'cm','')
        if dis <10.0:
@@ -113,10 +114,12 @@ def Bforward():
     GPIO.output(bin1,GPIO.HIGH)
     GPIO.output(bin2,GPIO.LOW)
     
-def Bbackwards():  
+def Bbackwards():
+    setupMotor()
     GPIO.output(bin2,GPIO.HIGH)
     GPIO.output(bin1,GPIO.LOW)
 def Abackwards():
+    setupMotor()
     GPIO.output(ain2,GPIO.LOW)
     GPIO.output(ain1,GPIO.HIGH)
 #stop both motors
@@ -154,19 +157,27 @@ while True:
             left()
             time.sleep(0.5)
             runall()
-        if loop()==0: #if the ultrasonic notices something within 10 cm returns 0
-            stop()
+        if loop()==0:
             right()
-            time.sleep(0.5) 
+            time.sleep(0.5)
+            if loop2()==0: #if the ultrasonic notices something within 10 cm returns 0
+                stop()
+                left()
+                time.sleep(0.5)
+                runall()
+    
+            else:
+                stop()
+                right()
+                time.sleep(0.5)
+                runall()
             if rightCounter >=2: #if it tries to turn right more than once, try something else
                 rightCounter=0
-                if loop2()==0:
-                    
-                    allBack()
-                    backCounter+=1
-                    time.sleep(0.25)
-                    left()
-                    time.sleep(0.5)
+                allBack()
+                backCounter+=1
+                time.sleep(0.25)
+                left()
+                time.sleep(0.5)
             time.sleep(0.25)
             rightCounter+=1
         runall()
